@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Weekly Report</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Vehicle Weekly Report</h1>
+    <form id="reportForm">
+        <label>Driver Name: <input type="text" name="driverName" required></label><br>
+        <label>Vehicle Plate: 
+            <select name="vehiclePlate">
+                <option>LUXO0000</option>
+                <option>LUXO0001</option>
+                <option>LUXO0002</option>
+                <!-- Add other options up to LUXO0050 -->
+            </select>
+        </label><br>
+        <label>Start Miles: <input type="number" name="startMiles" required></label><br>
+        <label>Finish Miles: <input type="number" name="finishMiles" required></label><br>
+        <label>Oil Percentage: <input type="number" name="oilPercentage" required>%</label><br>
+        <label>Gas Payment ($): <input type="number" name="gasPayment" required></label><br>
+        <label>Other Expenses: <textarea name="description"></textarea></label><br>
+        <button type="submit">Submit Report</button>
+    </form>
+
+    <br>
+    <!-- Button to Download Reports -->
+    <button id="downloadBtn">Download Reports as Excel</button>
+
+    <script>
+        // Form submission logic
+        document.getElementById('reportForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch('http://localhost:3000/weekly-reports', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    alert('Report submitted successfully!');
+                } else {
+                    alert('Failed to submit the report.');
+                }
+            } catch (error) {
+                alert('Error submitting the report.');
+            }
+        });
+
+        // Download button logic
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            window.location.href = 'http://localhost:3000/export-reports';
+        });
+    </script>
+</body>
+</html>
